@@ -27,7 +27,7 @@
             <input type="text" [(ngModel)]="user.state" class="form-control" name="state">
         </div>
 
-        <button (click)="addUser()" [disabled]=""
+        <button (click)="addUser()" [disabled]="user.firstName == '' || user.lastName == ''"
             class="btn btn-block mb3 mrg5">Add new user</button>
     </form>
 </div>

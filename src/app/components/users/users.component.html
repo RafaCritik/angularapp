@@ -1,0 +1,52 @@
+<button (click)="showUserForm = !showUserForm" class="btn btn-dark mb-3">Add user</button>
+<div class="card card-body mb-3" *ngIf="showUserForm">
+    <h2>Add User</h2>
+    <form (submit)="onSubmit($event)">
+        <div class="form-group">
+            <label>First name</label>
+            <input type="text" [(ngModel)]="user.firstName" class="form-control" name="fistName">
+        </div>
+        <div class="form-group">
+            <label>Last name</label>
+            <input type="text" [(ngModel)]="user.lastName" class="form-control" name="lastName">
+        </div>
+        <div class="form-group">
+            <label>Age</label>
+            <input type="number" [(ngModel)]="user.age" class="form-control" name="age">
+        </div>
+        <div class="form-group">
+            <label>Street</label>
+            <input type="text" [(ngModel)]="user.street" class="form-control" name="street">
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" [(ngModel)]="user.city" class="form-control" name="city">
+        </div>
+        <div class="form-group">
+            <label>State</label>
+            <input type="text" [(ngModel)]="user.state" class="form-control" name="state">
+        </div>
+
+        <button (click)="addUser()" [disabled]=""
+            class="btn btn-block mb3 mrg5">Add new user</button>
+    </form>
+</div>
+<ul class="list-unstyled" *ngIf="loaded && users?.length > 0">
+    <li class="card card-body mb-2" *ngFor="let user of users" [class.bg-light]="user.isActive">
+        <h3> {{ user.firstName }} {{ user.lastName }}
+            <small *ngIf="user.age && user.address">
+                <button (click)="toggleHide(user)" class="btn btn-dark btn-sm">
+                    <i [ngClass]="user.hide ? 'fa fa-plus' : 'fa fa-minus'"></i>
+                </button>
+            </small>
+        </h3>
+        <ul class="list-group" *ngIf="!user.hide && user.age && user.address">
+            <li class="list-group-item">Age: {{ user.age }}</li>
+            <li class="list-group-item">Address: {{ user.address.street }} {{ user.address.city }}
+                {{ user.address.state }}</li>
+            <li class="list-group-item">Joined: {{ user.registered | date:"fullDate" }} </li>
+        </ul>
+
+    </li>
+    <h4 *ngIf="users?.length == 0">No users found!</h4>
+    <h4 *ngIf="!loaded">Loading users</h4>

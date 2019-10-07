@@ -1,129 +1,61 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../models/User';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DataService } from '../../services/data.service';
+import { User } from '../models/User'; 
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
   user: User = {
     firstName: '',
     lastName: '',
-    age: null,
-    address: {
-      street: '',
-      city:'',
-      state: ''
-    }
-  };
+    email: ''
+  }
   users: User[];
-  showExtended: boolean = false;
+  showExtended: boolean = true;
   loaded: boolean = false;
   enableAdd: boolean = false;
   showUserForm: boolean = false;
+  @ViewChild('userForm', {static: false}) form: any;
 
-  constructor() { }
+  constructor(private dataService: DataService) {
+
+   }
 
   ngOnInit() {
-      this.users = [
-        {
-          firstName: 'Pere',
-          lastName: 'Pérez',
-          age: 41,
-          address: {
-            street: 'Patilots',
-            city: 'Sueca',
-            state: 'Spain',
-          },
-          isActive: true,
-          registered: new Date('01/08/1978 08:45:00'),
-          hide: true
-        },
-        {
-          firstName: 'Paco',
-          lastName: 'Rodríguez',
-          age: 21,
-          address: {
-            street: 'Benlloch',
-            city: 'Valencia',
-            state: 'Spain'
-          },
-          isActive: false,
-          registered: new Date('05/09/1999 08:45:00'),
-          hide: true
-        },
-        {
-          firstName: 'Genaro',
-          lastName: 'Gutiérrez',
-          age: 36,
-          address: {
-            street: 'Julepe',
-            city: 'Alzira',
-            state: 'Spain'
-          },
-          isActive: true,
-          registered: new Date('11/07/1999 08:45:00'),
-          hide: true
-        }
-      ];
-      this.loaded = true;
-
     
-
-  /*   this.addUser({
-      firstName: 'Florence',
-      lastName: 'Dubois',
-    }); */
-
-   /*  this.setCurrentClasses();
-    this.setCurrentStyles(); */
+      this.users = this.dataService.getUsers();
+      this.loaded = true;
   }
 
-  addUser() {
-    this.user.isActive = true;
-    this.user.registered = new Date();
-    this.users.unshift(this.user);
+  // addUser() {
+  //   this.user.isActive = true;
+  //   this.user.registered = new Date();
 
-    this.user = {
-      firstName: '',
-      lastName: '',
-      age: null,
-      address: {
-        street: '',
-        city:'',
-        state: ''
-      }
+  //   this.users.unshift(this.user);
+
+  //   this.user = {
+  //     firstName: '',
+  //     lastName: '',
+  //     email: ''
+  //   }
+  // }
+
+  onSubmit({value, valid}: {value: User, valid: boolean}) {
+    if(!valid){
+      console.log('Form is not valid');
+    } else {
+      value.isActive = true;
+      value.registered = new Date();
+      value.hide = true;
+
+      this.dataService.addUser(value);
+
+      this.form.reset();
     }
   }
 
-  toggleHide(user: User) {
-    user.hide = !user.hide;
-  }
-  onSubmit(e) {
-    console.log(123);
-
-    e.preventDefault();
-  }
-
-  fireEvent(e) {
-    console.log(e.type);
-    console.log(e.target.value);
-  }
-
-  /* setCurrentClasses() {
-    this.currentClasses = {
-      'btn-success': this.enableAdd,
-      'big-text': this.showExtended
-    }
-  }
-
-  setCurrentStyles() {
-    this.currentStyles = {
-      'padding-top': this.showExtended ? '0' : '40px',
-      'font-size': this.showExtended ? '' : '40px',
-    }
-  } */
-
-
+  
 }
